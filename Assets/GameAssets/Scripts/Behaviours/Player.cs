@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     [HideInInspector]
     public int playerIndex;
+    public int points = 0;
 
     [SerializeField] private float speed = 10;
     [SerializeField] public float maxVelocityChange = 10.0f;
@@ -22,6 +23,9 @@ public class Player : MonoBehaviour {
         input = this.GetComponent<PlayerInput>();
         rigidbody = this.GetComponent<Rigidbody>();
 
+        points = 0;
+
+        playerIndex = input.myPlayerIndex;
         rigidbody.freezeRotation = true;
     }
 

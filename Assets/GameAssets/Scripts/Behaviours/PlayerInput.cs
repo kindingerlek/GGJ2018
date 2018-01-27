@@ -44,7 +44,7 @@ public class PlayerInput : MonoBehaviour {
         if (myPlayerIndex == 0)
             myPlayerIndex = GameManager.Instance.AddPlayer(this.GetComponent<Player>()) + 1;
         else
-            GameManager.Instance.players[myPlayerIndex] = this.GetComponent<Player>();
+            GameManager.Instance.players[myPlayerIndex-1] = this.GetComponent<Player>();
 
         transform.name = "Player " + myPlayerIndex;
 
