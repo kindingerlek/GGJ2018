@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-    [HideInInspector]
-    public int playerIndex;
+    
+    public int playerIndex { get { return input.myPlayerIndex; } }
+
     public int points = 0;
 
+    [SerializeField] private Color color = Color.white;
     [SerializeField] private float speed = 10;
-    [SerializeField] public float maxVelocityChange = 10.0f;
-    [SerializeField] public bool canJump = true;
-    [SerializeField] public float jumpHeight = 2.0f;
-
+    [SerializeField] private float maxVelocityChange = 10.0f;
 
     
     private PlayerInput input;
@@ -24,8 +23,6 @@ public class Player : MonoBehaviour {
         rigidbody = this.GetComponent<Rigidbody>();
 
         points = 0;
-
-        playerIndex = input.myPlayerIndex;
         rigidbody.freezeRotation = true;
     }
 
