@@ -1,5 +1,12 @@
 ﻿using UnityEngine;
 
+public enum DestroyOptions
+{
+    DontDestroy,
+    DestroyBehaviour,
+    DestroyGameObject
+}
+
 /// <summary>
 /// Helper class for creating singletons components in Unity.
 /// Based off on this thread: <seealso cref="https://stackoverflow.com/documentation/unity3d/2137/singletons-in-unity#t=201705290349195977014"/>
@@ -8,7 +15,6 @@
 [DisallowMultipleComponent]
 public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : SingletonMonoBehaviour<T>
 {
-
     private static object m_globalObject = new object();
     private static bool m_hasInstance;
     private static bool m_isQuitting;
@@ -36,7 +42,7 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : Single
     /// Destroy instances if there is more than one.
     /// Default is true.
     /// </summary>
-    public static bool DestroyOthers { get; set; }
+    public static DestroyOptions DestroyOthers { get; set; }
 
     /// <summary>
     /// Get this singleton instance.
@@ -71,11 +77,14 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : Single
                     {
                         Debug.LogWarningFormat("{0} instances of singleton object '{1}'!", instances.Length, typeof(T).Name);
 
-                        if (DestroyOthers)
+                        if (DestroyOthers != DestroyOptions.DontDestroy)
                             for (var i = 1; i < instances.Length; i++)
                             {
                                 Debug.LogWarningFormat("Destroyed singleton instance '{0}'", typeof(T).Name);
-                                Destroy(instances[i]);
+                                if (DestroyOthers == DestroyOptions.DestroyBehaviour)
+                                    Destroy(instances[i]);
+                                else
+                                    Destroy(instances[i].gameObject);
                             }
                     }
                 }
@@ -99,7 +108,7 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : Single
         Lazy = true;
         FindInactive = true;
         Persist = false;
-        DestroyOthers = true;
+        DestroyOthers = DestroyOptions.DestroyBehaviour;
     }
 
     /// <summary>
@@ -114,10 +123,13 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : Single
             if (!m_hasInstance)
                 Instance = (T)this;
 
-            else if (DestroyOthers && Instance != this)
+            else if (DestroyOthers != DestroyOptions.DontDestroy && Instance != this)
             {
                 Debug.LogWarningFormat("Destroyed singleton instance '{0}'", typeof(T).Name);
-                Destroy(this);
+                if (DestroyOthers == DestroyOptions.DestroyBehaviour)
+                    Destroy(this);
+                else
+                    Destroy(gameObject);
             }
     }
 
@@ -132,6 +144,9 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : Single
     protected virtual void OnDestroy()
     {
         m_isQuitting = true;
-        m_hasInstance = false;
+        if (m_hasInstance && m_instance == this) {
+            m_hasInstance = false;
+            m_hasInstance = default(T);
+        }
     }
 }

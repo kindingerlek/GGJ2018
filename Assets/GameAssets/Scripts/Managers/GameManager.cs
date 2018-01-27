@@ -19,7 +19,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
     {
         Lazy = false;
         FindInactive = true;
-        DestroyOthers = true;
+        DestroyOthers = DestroyOptions.DestroyBehaviour;
         Persist = true;
     }
     
@@ -39,6 +39,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
     protected override void Awake()
     {
         base.Awake();
+        CountPoints();
         InvokeRepeating("ChangeRules", 5, 10);
     }
 

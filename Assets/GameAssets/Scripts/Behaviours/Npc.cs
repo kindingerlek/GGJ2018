@@ -48,14 +48,20 @@ public class Npc : MonoBehaviour {
 
     public IEnumerator Walking_Enter()
     {
+        walking.Init(agent);
         while (fsm.State == States.Walking)
             yield return walking.WalkToRandomPosition(agent);
     }
     #endregion
 
+    void OnDrawGizmosSelected() {
+        GetState().OnDrawGizmosSelected();
+    }
+
     #region States Data
     interface IStateHandler {
         void OnCollisionEnter(Collision other);
+        void OnDrawGizmosSelected();
     }
 
     [Serializable]
@@ -68,12 +74,25 @@ public class Npc : MonoBehaviour {
         const float movementTrackInterval = 0.1f;
 
         bool didCollide;
+        Vector3 initialPosition;
+
+        public void Init(NavMeshAgent agent)
+        {
+            initialPosition = agent.transform.position;
+        }
 
         public IEnumerator WalkToRandomPosition(NavMeshAgent agent)
         {
             didCollide = false;
-            var nextPos = GetRandomWalkPoint(agent.transform);
-            agent.destination = nextPos;
+
+            do {
+                var nextPos = GetRandomWalkPoint();
+                agent.destination = nextPos;
+
+                while (agent.pathPending) {
+                    yield return null;
+                }
+            } while (agent.pathStatus == NavMeshPathStatus.PathInvalid);
 
             yield return new WaitForSeconds(UnityEngine.Random.value * maxWait);
 
@@ -81,21 +100,17 @@ public class Npc : MonoBehaviour {
             float movementDuration = 0;
 
             while (movementDuration < maxDuration && !didCollide) {
-                if (!agent.pathPending) {
-                    if (agent.pathStatus == NavMeshPathStatus.PathInvalid) {
-                        break;
-                    }
 
-                    if (agent.remainingDistance <= agent.stoppingDistance) {
-                        break;
-                    }
-
-                    var newPosition = agent.transform.position;
-                    if (Vector3.Distance(lastPosition, newPosition) < 0.1f)
-                        break;
-                }
                 yield return new WaitForSeconds(movementTrackInterval);
                 movementDuration += movementTrackInterval;
+
+                if (agent.remainingDistance <= agent.stoppingDistance) {
+                    break;
+                }
+
+                var newPosition = agent.transform.position;
+                if (Vector3.Distance(lastPosition, newPosition) < 0.1f)
+                    break;
             }
         }
 
@@ -104,11 +119,22 @@ public class Npc : MonoBehaviour {
             didCollide = true;
         }
 
-        Vector3 GetRandomWalkPoint(Transform transform)
+        Vector3 GetRandomWalkPoint()
         {
-            var randomPosition = transform.position + UnityEngine.Random.insideUnitSphere * maxDistance;
-            randomPosition.y = transform.position.y;
-            return randomPosition;
+            NavMeshHit hit;
+
+            Vector3 randomPosition;
+            do {
+                randomPosition = initialPosition + UnityEngine.Random.insideUnitSphere * maxDistance;
+            } while (!NavMesh.SamplePosition(randomPosition, out hit, maxDistance, 1));
+
+            return hit.position;
+        }
+
+        void IStateHandler.OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.yellow * new Color(1, 1, 1, 0.1f);
+            Gizmos.DrawSphere(initialPosition, maxDistance);
         }
     }
     #endregion

@@ -123,18 +123,6 @@ MonoBehaviour:
   lookRightKey: Xbox{0}RStickRight
   attackKey: Xbox{0}A
   defenceKey: Xbox{0}B
-  axisHorizontal: 0
-  axisVertical: 0
-  axisLookHorizontal: 0
-  axisLookVertical: 0
-  attack: 0
-  attackDown: 0
-  defence: 0
-  defenceDown: 0
-  axisDirection: {x: 0, y: 0}
-  axisDirectionClamped: {x: 0, y: 0}
-  worldAxisDirection: {x: 0, y: 0, z: 0}
-  worldAxisDirectionClamped: {x: 0, y: 0, z: 0}
 --- !u!114 &114365111278056576
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -146,12 +134,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1769e45b8f5bf3f4f8f56ba844232524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerIndex: 0
   points: 0
+  color: {r: 1, g: 1, b: 1, a: 1}
   speed: 10
   maxVelocityChange: 10
-  canJump: 1
-  jumpHeight: 2
 --- !u!136 &136825380099197308
 CapsuleCollider:
   m_ObjectHideFlags: 1
