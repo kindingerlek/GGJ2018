@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class GameManager : SingletonMonoBehaviour<GameManager> {
 
-    private RuleManager ruleManager;
+    public  RuleManager ruleManager = new RuleManager();
     public float timeToChangeRule;
     public List<Player> players = new List<Player>();
 
@@ -30,7 +30,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
 
 
 
-    public int CompareInfectation(Infectable inf1, Infectable inf2) {
+    public int CompareInfectation(int inf1, int inf2) {
         return ruleManager.CompareInfectation(inf1,inf2);
     }
 
@@ -50,6 +50,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
     {
         base.Awake();
         InvokeRepeating("CountPoints", 5, 10);
+        InvokeRepeating("ChangeRules", 5, 10);
     }
 
     public void Update()
@@ -72,11 +73,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
             points[i]++;
         }
 
-
         P1Score.text = "P1: " + points[1];
         P2Score.text = "P2: " + points[2];
         P3Score.text = "P3: " + points[3];
         P4Score.text = "P4: " + points[4];
+    }
+    void ChangeRules()
+    {
+        this.ruleManager.NextRules();
     }
 
 

@@ -9,9 +9,12 @@ public class RuleManager : MonoBehaviour
 
     public enum infectationsTypes { red = 1, blue, green, brown };
 
+    [SerializeField]
+    int[] diseasesRule = { 0, (int)infectationsTypes.red, (int)infectationsTypes.blue, (int)infectationsTypes.green, (int)infectationsTypes.brown };
 
-    int[] diseasesRule = { (int)infectationsTypes.red, (int)infectationsTypes.blue, (int)infectationsTypes.green, (int)infectationsTypes.brown };
 
+    static RuleManager() {
+    }
     // Use this for initialization
     void Start()
     {
@@ -23,34 +26,42 @@ public class RuleManager : MonoBehaviour
     {
 
     }
- 
+
+    public void NextRules() {
+        diseasesRule.Shuffle();
+    }
+
+    public int[] GetRules(){
+        return diseasesRule;
+    }
 
 
-   
-    public int CompareInfectation(Infectable infect1, Infectable infect2)
+    public int CompareInfectation(int infect1, int infect2)
     {
 
-        int d1 = infect1.infectedBy.GetComponent<Player>().playerIndex;
-        int d2 = infect2.infectedBy.GetComponent<Player>().playerIndex;
-        int d1Pos = 0;
-        int d2Pos = 0;
+        int d1Pos = 1;
+        int d2Pos = 1;
 
-        for (int i = 0; i < diseasesRule.Length; i++) {
-            if (diseasesRule[i] == d1) {
+        if (infect1 == 0 && infect2 == 0) {
+            return 0;
+        }
+        for (int i = 1; i < diseasesRule.Length; i++) {
+            if (diseasesRule[i] == infect1) {
                 d1Pos = i;
+                continue;
             }
         
-            if (diseasesRule[i] == d2)
+            if (diseasesRule[i] == infect2)
             {
                 d2Pos = i;
             }
         }
 
-        if (d1Pos +1 == d2Pos|| (d1Pos==3 && d2Pos==0)) {
+        if (d1Pos +1 == d2Pos|| (d1Pos==4 && d2Pos==1) ||infect2 == 0) {
             return 1;
         }
 
-        if (d2Pos + 1 == d1Pos || (d2Pos == 3 && d1Pos == 0))
+        if (d2Pos + 1 == d1Pos || (d2Pos == 4 && d1Pos == 1) || infect1 == 0)
         {
             return -1;
         }
