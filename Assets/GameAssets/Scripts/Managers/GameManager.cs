@@ -7,6 +7,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
 
     public float timeToChangeRule;
     public List<Player> players = new List<Player>();
+    public List<Infectable> infectables = new List<Infectable>();
 
 
     [Header("UI")]
@@ -39,7 +40,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
     protected override void Awake()
     {
         base.Awake();
-        CountPoints();
+        UpdatePoints();
         InvokeRepeating("ChangeRules", 5, 10);
     }
 
@@ -47,31 +48,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
     {
     }
 
-    public void CountPoints()
+    public void UpdatePoints()
     {
-        int[] points =  new int[5];
-
-        Infectable[] infectables = GameObject.FindObjectsOfType<Infectable>();
-
-        foreach(var infect in infectables)
-        {
-            if (infect.infectedBy == null)
-                continue;
-
-            int i = infect.infectedBy.GetComponent<Player>().playerIndex;
-
-            points[i]++;
-        }
-
-        P1Score.text = "P1: " + points[1];
-        P2Score.text = "P2: " + points[2];
-        P3Score.text = "P3: " + points[3];
-        P4Score.text = "P4: " + points[4];
+        P1Score.text = "P1: " + players[0].points;
+        P2Score.text = "P2: " + players[1].points;
+        P3Score.text = "P3: " + players[2].points;
+        P4Score.text = "P4: " + players[3].points;
     }
+
     void ChangeRules()
     {
         RuleManager.Instance.NextRules();
     }
-
-
 }
