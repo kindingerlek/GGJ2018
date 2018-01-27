@@ -5,6 +5,7 @@ using System.Reflection;
 using UnityEngine;
 
 public class PlayerInput : MonoBehaviour {
+    public bool registerPlayer = true;
     public int myPlayerIndex;
 
     [Space(15)]
@@ -42,10 +43,12 @@ public class PlayerInput : MonoBehaviour {
 
     public void Awake()
     {
-        if (myPlayerIndex == 0)
-            myPlayerIndex = GameManager.Instance.AddPlayer(this.GetComponent<Player>()) + 1;
-        else
-            GameManager.Instance.players[myPlayerIndex-1] = this.GetComponent<Player>();
+        if (registerPlayer) {
+            if (myPlayerIndex == 0)
+                myPlayerIndex = GameplayManager.Instance.AddPlayer(this.GetComponent<Player>()) + 1;
+            else
+                GameplayManager.Instance.players[myPlayerIndex-1] = this.GetComponent<Player>();
+        }
 
         transform.name = "Player " + myPlayerIndex;
 

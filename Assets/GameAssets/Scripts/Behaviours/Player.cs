@@ -33,7 +33,7 @@ public class Player : MonoBehaviour {
             Debug.Log("Please assing the child who has sprite renderer to be indicator");
         else
         {
-            indicator.color = GameManager.Instance.getPlayerColor(playerIndex);
+            indicator.color = GameManager.Instance.GetPlayerColor(playerIndex);
         }
 
         points = 0;
@@ -92,14 +92,14 @@ public class Player : MonoBehaviour {
         }
 
         if (updated) {
-            GameManager.Instance.UpdatePoints();
+            GameplayManager.Instance.UpdatePoints();
         }
     }
 
     void StealPoints(Player otherPlayer, int points)
     {
         stealCredits[otherPlayer] -= points;
-        var steal = GameManager.Instance.infectables
+        var steal = GameplayManager.Instance.infectables
             .Where(i => i.infectedBy == otherPlayer)
             .OrderByDescending(i => Vector3.SqrMagnitude(i.transform.position - transform.position))
             .Take(points);

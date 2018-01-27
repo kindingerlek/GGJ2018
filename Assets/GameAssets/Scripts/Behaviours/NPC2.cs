@@ -48,7 +48,7 @@ public class NPC2 : MonoBehaviour {
             Debug.Log("None npc indicator, please manually assing this");
         else
         {
-            npcIndicator.color = GetComponent<Infectable>().infectedBy ? GameManager.Instance.getPlayerColor(GetComponent<Infectable>().infectedBy.playerIndex) : Color.grey;
+            npcIndicator.color = GetComponent<Infectable>().infectedBy ? GameManager.Instance.GetPlayerColor(GetComponent<Infectable>().infectedBy.playerIndex) : Color.grey;
         }
 
         initialPosition = transform.position;
