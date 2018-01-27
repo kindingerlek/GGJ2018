@@ -9,12 +9,17 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
     public List<Player> players = new List<Player>();
     public List<Infectable> infectables = new List<Infectable>();
 
-
+    [Header("Setup")]
+    [SerializeField] Color P1Color;
+    [SerializeField] Color P2Color;
+    [SerializeField] Color P3Color;
+    [SerializeField] Color P4Color;
+    
     [Header("UI")]
-    public Text P1Score;
-    public Text P2Score;
-    public Text P3Score;
-    public Text P4Score;
+    [SerializeField] Text P1Score;
+    [SerializeField] Text P2Score;
+    [SerializeField] Text P3Score;
+    [SerializeField] Text P4Score;
 
     static GameManager()
     {
@@ -35,6 +40,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
         players.Add(player);
 
         return count;
+    }
+
+    public Color getPlayerColor(int i)
+    {
+        Color[] colors = { Color.white, P1Color, P2Color, P3Color, P4Color };
+
+        return i >= colors.Length ? colors[0] : colors[i];
     }
 
     protected override void Awake()

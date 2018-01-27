@@ -69,7 +69,7 @@ public class Infectable : MonoBehaviour {
             infectedBy.points += 1;
         }
 
-        renderer.material = other.GetComponent<Renderer>().material;
+        renderer.material.color = GameManager.Instance.getPlayerColor(other.playerIndex);
 
         GameManager.Instance.UpdatePoints();
     }

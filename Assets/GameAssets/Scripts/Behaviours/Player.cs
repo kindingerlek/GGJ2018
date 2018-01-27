@@ -8,8 +8,6 @@ public class Player : MonoBehaviour {
     public int playerIndex { get { return input.myPlayerIndex; } }
 
     public int points = 0;
-    
-    public Color color = Color.white;
 
     [SerializeField] private SpriteRenderer indicator;
     [SerializeField] private float speed = 10;
@@ -35,7 +33,7 @@ public class Player : MonoBehaviour {
             Debug.Log("Please assing the child who has sprite renderer to be indicator");
         else
         {
-            indicator.color = color;
+            indicator.color = GameManager.Instance.getPlayerColor(playerIndex);
         }
 
         points = 0;
