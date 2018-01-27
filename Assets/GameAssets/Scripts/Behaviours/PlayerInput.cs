@@ -31,7 +31,7 @@ public class PlayerInput : MonoBehaviour {
     [HideInInspector] public bool defence;
     [HideInInspector] public bool defenceDown;
 
-    [HideInInspector] public bool isAxisOn { get { return axisDirectionClamped.sqrMagnitude > 0.05f; } }
+    [HideInInspector] public bool isAxisOn { get { return axisDirectionClamped.sqrMagnitude > 0.0001f; } }
 
     [HideInInspector] public Vector2 axisDirection = new Vector2();
     [HideInInspector] public Vector2 axisDirectionClamped = new Vector2();
@@ -41,7 +41,10 @@ public class PlayerInput : MonoBehaviour {
 
     public void Awake()
     {
-        myPlayerIndex = GameManager.Instance.AddPlayer(this.GetComponent<Player>()) + 1 ;
+        if (myPlayerIndex == 0)
+            myPlayerIndex = GameManager.Instance.AddPlayer(this.GetComponent<Player>()) + 1;
+        else
+            GameManager.Instance.players[myPlayerIndex] = this.GetComponent<Player>();
 
         InitInput();
     }
@@ -50,36 +53,40 @@ public class PlayerInput : MonoBehaviour {
     {
         int i = myPlayerIndex;
 
-        cInput.SetKey(string.Format("P{0} Up",         i), GetStringFromKeys(string.Format(upKey, i)));
-        cInput.SetKey(string.Format("P{0} Down",       i), GetStringFromKeys(string.Format(downKey, i)));
-        cInput.SetKey(string.Format("P{0} Left",       i), GetStringFromKeys(string.Format(leftKey, i)));
-        cInput.SetKey(string.Format("P{0} Right",      i), GetStringFromKeys(string.Format(rightKey, i)));
-        cInput.SetKey(string.Format("P{0} Look Up",    i), GetStringFromKeys(string.Format(lookUpKey, i)));
-        cInput.SetKey(string.Format("P{0} Look Down",  i), GetStringFromKeys(string.Format(lookDownKey, i)));
-        cInput.SetKey(string.Format("P{0} Look Left",  i), GetStringFromKeys(string.Format(lookLeftKey, i)));
-        cInput.SetKey(string.Format("P{0} Look Right", i), GetStringFromKeys(string.Format(lookRightKey, i)));
-        cInput.SetKey(string.Format("P{0} Attack",     i), GetStringFromKeys(string.Format(attackKey, i)));
-        cInput.SetKey(string.Format("P{0} Defence",    i), GetStringFromKeys(string.Format(defenceKey, i)));
+        cInput.SetKey(string.Format("P{0} Up",         i), GetKeyFromString(string.Format(upKey, i)));
+        cInput.SetKey(string.Format("P{0} Down",       i), GetKeyFromString(string.Format(downKey, i)));
+        cInput.SetKey(string.Format("P{0} Left",       i), GetKeyFromString(string.Format(leftKey, i)));
+        cInput.SetKey(string.Format("P{0} Right",      i), GetKeyFromString(string.Format(rightKey, i)));
+        cInput.SetKey(string.Format("P{0} Look Up",    i), GetKeyFromString(string.Format(lookUpKey, i)));
+        cInput.SetKey(string.Format("P{0} Look Down",  i), GetKeyFromString(string.Format(lookDownKey, i)));
+        cInput.SetKey(string.Format("P{0} Look Left",  i), GetKeyFromString(string.Format(lookLeftKey, i)));
+        cInput.SetKey(string.Format("P{0} Look Right", i), GetKeyFromString(string.Format(lookRightKey, i)));
+        cInput.SetKey(string.Format("P{0} Attack",     i), GetKeyFromString(string.Format(attackKey, i)));
+        cInput.SetKey(string.Format("P{0} Defence",    i), GetKeyFromString(string.Format(defenceKey, i)));
 
 
         cInput.SetAxis(string.Format("P{0} Horizontal",      i),
-            string.Format("P{0} Up",   i),
-            string.Format("P{0} Down", i));
+            string.Format("P{0} Left",   i),
+            string.Format("P{0} Right", i),
+            3);
 
         cInput.SetAxis(string.Format("P{0} Vertical",        i),
-            string.Format("P{0} Right", i),
-            string.Format("P{0} Left",  i));
+            string.Format("P{0} Down", i),
+            string.Format("P{0} Up",  i),
+            3);
 
         cInput.SetAxis(string.Format("P{0} Look Horizontal", i),
-            string.Format("P{0} Look Up",   i),
-            string.Format("P{0} Look Down", i));
+            string.Format("P{0} Look Left",   i),
+            string.Format("P{0} Look Right", i),
+            3);
 
         cInput.SetAxis(string.Format("P{0} Look Vertical",   i),
-            string.Format("P{0} Look Right", i),
-            string.Format("P{0} Look Left",  i));
+            string.Format("P{0} Look Down", i),
+            string.Format("P{0} Look Up",  i),
+            3);
     }
 
-    public static string GetStringFromKeys(string keyName)
+    public static string GetKeyFromString(string keyName)
     {
         FieldInfo field = typeof(Keys).GetField(keyName);
         PropertyInfo property = typeof(Keys).GetProperty(keyName);
