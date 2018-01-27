@@ -43,10 +43,12 @@ public class Player : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!collision.gameObject.GetComponent<Infectable>())
+        Infectable infectable = collision.gameObject.GetComponent<Infectable>();
+
+        if (infectable == null)
             return;
 
-        Debug.Log(this.name = ": I should infect someone");
+        infectable.Infect(this.gameObject);
             
     }
 }
