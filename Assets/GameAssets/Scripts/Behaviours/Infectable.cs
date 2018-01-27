@@ -29,7 +29,7 @@ public class Infectable : MonoBehaviour {
 
         infectable.Infect(this.gameObject);
     }
-    
+
 
     public void Infect(GameObject other)
     {
@@ -38,8 +38,8 @@ public class Infectable : MonoBehaviour {
             if (infectedBy.GetInstanceID() == other.GetInstanceID())
                 return;
         }
-        
-        int i1 = this.infectedBy ? this.infectedBy.playerIndex : 0 ;
+
+        int i1 = this.infectedBy ? this.infectedBy.playerIndex : 0;
         int i2 = 0;
 
 
@@ -55,23 +55,25 @@ public class Infectable : MonoBehaviour {
 
 
 
-        if (infectRes == RuleManager.collisionType.MeInfectOther){
+        if (infectRes == RuleManager.collisionType.MeInfectOther) {
             Debug.Log(this.name + ": I infect " + other.name);
 
             if (other.GetComponent<Infectable>())
-                other.GetComponent<Infectable>().infectedBy = this.infectedBy;
-            
-            other.GetComponent<Renderer>().material = renderer.material;
+            {
+                other.GetComponent<Infectable>().infectedBy = this.GetComponent<Player>() ? this.GetComponent<Player>() : this.infectedBy;
+                other.GetComponent<Renderer>().material = renderer.material;
+
+            }
 
         } else if (infectRes == RuleManager.collisionType.OtherInfectMe) {
             Debug.Log(this.name + ": I was infected by " + other.name);
 
-            if (other.GetComponent<Infectable>())
-                this.infectedBy = other.GetComponent<Infectable>().infectedBy; 
+            if (this.GetComponent<Infectable>()) { 
+                this.infectedBy = other.GetComponent<Player>() ? other.GetComponent<Player>() : other.GetComponent<Infectable>().infectedBy;
 
             renderer.material = other.GetComponent<Renderer>().material;
         }
-
+    }
         GameManager.Instance.CountPoints();
     }
 }

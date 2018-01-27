@@ -9,7 +9,7 @@ public class RuleManager : SingletonMonoBehaviour<RuleManager>
 
     public enum infectationsTypes { P1 = 1, P2, P3, P4 };
     public enum collisionType { MeInfectOther, Nothing , OtherInfectMe };
-
+    public bool activeRules = true;
     static RuleManager()
     {
         Lazy = false;
@@ -20,16 +20,25 @@ public class RuleManager : SingletonMonoBehaviour<RuleManager>
 
 
     [SerializeField] //                            0                        1                  2                     3
-    infectationsTypes[] infectionRole = { infectationsTypes.P1, infectationsTypes.P2, infectationsTypes.P3, infectationsTypes.P4 };
-    
+    int[] infectionRole = { (int)infectationsTypes.P1, (int)infectationsTypes.P2, (int)infectationsTypes.P3, (int)infectationsTypes.P4 };
+
+    private void reshuffle(int[] infectionRole)
+    {
+        // Knuth shuffle algorithm :: courtesy of Wikipedia :)
+        for (int t = 0; t < infectionRole.Length; t++)
+        {
+            int tmp = infectionRole[t];
+            int r = Random.Range(t, infectionRole.Length);
+            infectionRole[t] = infectionRole[r];
+            infectionRole[r] = tmp;
+        }
+    }
 
     public void NextRules() {
-        infectionRole.Shuffle();
+        reshuffle(infectionRole);
     }
 
-    public infectationsTypes[] GetRules(){
-        return infectionRole;
-    }
+  
 
 
     public collisionType CompareInfectation(int infect1, int infect2)
@@ -43,13 +52,14 @@ public class RuleManager : SingletonMonoBehaviour<RuleManager>
 
         if (infect1 == 0) {
             return collisionType.OtherInfectMe;
-        } else if (infect2 == 0) {
+        }
+        else if (infect2 == 0) {
             return collisionType.MeInfectOther;
         }
 
 
         for (int i = 1; i < infectionRole.Length; i++) {
-            if (infectionRole[i] == (infectationsTypes) infect1) {
+            if (infectionRole[i] ==  infect1) {
                 indexInfect1 = i;
                 break;
             }
@@ -60,11 +70,11 @@ public class RuleManager : SingletonMonoBehaviour<RuleManager>
 
 
         //Check if I can infect the other
-        if (infectionRole[nextCheck] == (infectationsTypes) infect2){
+        if (infectionRole[nextCheck] ==  infect2){
             return collisionType.MeInfectOther;
         }
 
-        if (infectionRole[previousCheck] == (infectationsTypes) infect2)
+        if (infectionRole[previousCheck] == infect2)
         {
             return collisionType.OtherInfectMe;
         }

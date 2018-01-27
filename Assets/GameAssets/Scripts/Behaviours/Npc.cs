@@ -35,6 +35,7 @@ public class Npc : MonoBehaviour {
     void OnCollisionEnter(Collision other)
     {
         GetState().OnCollisionEnter(other);
+
     }
 
     #region States
