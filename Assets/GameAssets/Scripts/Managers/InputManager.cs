@@ -13,7 +13,7 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
     {
         Lazy = false;
         FindInactive = true;
-        DestroyOthers = true;
+        DestroyOthers = DestroyOptions.DestroyBehaviour;
         Persist = true;
     }
 

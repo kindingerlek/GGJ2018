@@ -14,7 +14,7 @@ public class RuleManager : SingletonMonoBehaviour<RuleManager>
     {
         Lazy = false;
         FindInactive = true;
-        DestroyOthers = true;
+        DestroyOthers = DestroyOptions.DestroyBehaviour;
         Persist = true;
     }
 

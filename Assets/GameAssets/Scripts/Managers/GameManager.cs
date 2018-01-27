@@ -19,7 +19,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
     {
         Lazy = false;
         FindInactive = true;
-        DestroyOthers = true;
+        DestroyOthers = DestroyOptions.DestroyBehaviour;
         Persist = true;
     }
     
