@@ -73,7 +73,7 @@ public class Player : MonoBehaviour {
     {
         bool updated = false;
         foreach(var otherPlayer in playersInArea) {
-            if (otherPlayer.points > points)
+            if (otherPlayer.points < points)
                 continue;
 
             var pointsToSteal = Mathf.Min(otherPlayer.points, Time.fixedDeltaTime * stealPointsPerSecond);
