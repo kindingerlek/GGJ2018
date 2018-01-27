@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
@@ -13,10 +14,14 @@ public class SceneController : MonoBehaviour
     }
 
     public void Play() {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("gameplay");
+        SceneManager.LoadScene("gameplay");
     }
 
     public void Credits() {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("credits");
+        SceneManager.LoadScene("credits");
+    }
+
+    public void Configuration() {
+        SceneManager.LoadScene("configuration");
     }
 }
