@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 54728059749573028}
   - component: {fileID: 114338313051399898}
   - component: {fileID: 114365111278056576}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,8 +147,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerIndex: 0
-  speedForward: 15
-  speedSides: 12
+  points: 0
+  speed: 10
   maxVelocityChange: 10
   canJump: 1
   jumpHeight: 2

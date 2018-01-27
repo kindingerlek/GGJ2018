@@ -23,11 +23,7 @@ public class RuleManager : MonoBehaviour
     {
 
     }
-
-    void NextRule()
-    {
-        diseasesRule.Shuffle();
-    }
+ 
 
 
    
