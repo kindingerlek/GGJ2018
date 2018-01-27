@@ -20,6 +20,18 @@ public class Infectable : MonoBehaviour {
         originalMaterial = renderer.material;
     }
 
+    void Start()
+    {
+        GameManager.Instance.infectables.Add(this);
+    }
+
+    void OnDestroy()
+    {
+        if (GameManager.Instance) {
+            GameManager.Instance.infectables.Remove(this);
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         Infectable infectable = collision.gameObject.GetComponent<Infectable>();
@@ -27,51 +39,38 @@ public class Infectable : MonoBehaviour {
         if (infectable == null)
             return;
 
-        infectable.Infect(this.gameObject);
-    }
-    
-
-    public void Infect(GameObject other)
-    {
-        if (infectedBy != null)
-        {
-            if (infectedBy.GetInstanceID() == other.GetInstanceID())
-                return;
-        }
-        
-        int i1 = this.infectedBy ? this.infectedBy.playerIndex : 0 ;
-        int i2 = 0;
-
-
-        if (other.GetComponent<Player>())
-            i2 = other.GetComponent<Player>().playerIndex;
-
-        else if (other.GetComponent<Infectable>())
-            i2 = other.GetComponent<Infectable>().infectedBy == null ? 0 : other.GetComponent<Infectable>().infectedBy.playerIndex;
-
-
+        var i1 = infectedBy == null? 0 : infectedBy.playerIndex;
+        var i2 = infectable.infectedBy == null? 0 : infectable.infectedBy.playerIndex;
 
         RuleManager.collisionType infectRes = RuleManager.Instance.CompareInfectation(i1, i2);
+        if (infectRes == RuleManager.collisionType.MeInfectOther) {
+            Debug.Log(this.name + ": I infect " + infectable.name);
+            infectable.Infect(infectedBy);
+        }
+        else if (infectRes == RuleManager.collisionType.OtherInfectMe) {
+            Debug.Log(this.name + ": I was infected by " + infectable.name);
+            Infect(infectable.infectedBy);
+        }
+    }
 
 
+    public void Infect(Player other)
+    {
+        if (other == infectedBy)
+            return;
 
-        if (infectRes == RuleManager.collisionType.MeInfectOther){
-            Debug.Log(this.name + ": I infect " + other.name);
-
-            if (other.GetComponent<Infectable>())
-                other.GetComponent<Infectable>().infectedBy = this.infectedBy;
-            
-            other.GetComponent<Renderer>().material = renderer.material;
-
-        } else if (infectRes == RuleManager.collisionType.OtherInfectMe) {
-            Debug.Log(this.name + ": I was infected by " + other.name);
-
-            if (other.GetComponent<Infectable>())
-                this.infectedBy = other.GetComponent<Infectable>().infectedBy; 
-
-            renderer.material = other.GetComponent<Renderer>().material;
+        if (infectedBy != null) {
+            infectedBy.points -= 1;
         }
 
-        GameManager.Instance.CountPoints();
+        infectedBy = other;
+
+        if (infectedBy) {
+            infectedBy.points += 1;
+        }
+
+        renderer.material = other.GetComponent<Renderer>().material;
+
+        GameManager.Instance.UpdatePoints();
     }
 }
