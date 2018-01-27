@@ -91,8 +91,11 @@ public class Infectable : MonoBehaviour {
     [Serializable]
     struct Walking : IStateHandler
     {
-        [SerializeField] float randomMovementRange;
-        [SerializeField] float maxWaitBeforeWalk;
+        [SerializeField] float maxDistance;
+        [SerializeField] float maxWait;
+        [SerializeField] float maxDuration;
+
+        const float movementTrackInterval = 0.1f;
 
         bool didCollide;
 
@@ -102,10 +105,27 @@ public class Infectable : MonoBehaviour {
             var nextPos = GetRandomWalkPoint(agent.transform);
             agent.destination = nextPos;
 
-            yield return new WaitForSeconds(UnityEngine.Random.value * maxWaitBeforeWalk);
+            yield return new WaitForSeconds(UnityEngine.Random.value * maxWait);
 
-            while (!didCollide && (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)) {
-                yield return new WaitForSeconds(0.1f);
+            Vector3 lastPosition = agent.transform.position;
+            float movementDuration = 0;
+
+            while (movementDuration < maxDuration && !didCollide) {
+                if (!agent.pathPending) {
+                    if (agent.pathStatus == NavMeshPathStatus.PathInvalid) {
+                        break;
+                    }
+
+                    if (agent.remainingDistance <= agent.stoppingDistance) {
+                        break;
+                    }
+
+                    var newPosition = agent.transform.position;
+                    if (Vector3.Distance(lastPosition, newPosition) < 0.1f)
+                        break;
+                }
+                yield return new WaitForSeconds(movementTrackInterval);
+                movementDuration += movementTrackInterval;
             }
         }
 
@@ -116,7 +136,7 @@ public class Infectable : MonoBehaviour {
 
         Vector3 GetRandomWalkPoint(Transform transform)
         {
-            var randomPosition = transform.position + UnityEngine.Random.insideUnitSphere * randomMovementRange;
+            var randomPosition = transform.position + UnityEngine.Random.insideUnitSphere * maxDistance;
             randomPosition.y = transform.position.y;
             return randomPosition;
         }
