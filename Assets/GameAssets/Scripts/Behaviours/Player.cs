@@ -39,6 +39,14 @@ public class Player : MonoBehaviour {
         velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
         velocityChange.y = 0;
         rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
-        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!collision.gameObject.GetComponent<Infectable>())
+            return;
+
+        Debug.Log(this.name = ": I should infect someone");
+            
     }
 }
