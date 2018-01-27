@@ -52,15 +52,14 @@ public class Infectable : MonoBehaviour {
             Infect(infectable.infectedBy);
         }
     }
-    
+
 
     public void Infect(Player other)
     {
         if (other == infectedBy)
             return;
 
-        if (infectedBy != null)
-        {
+        if (infectedBy != null) {
             infectedBy.points -= 1;
         }
 
