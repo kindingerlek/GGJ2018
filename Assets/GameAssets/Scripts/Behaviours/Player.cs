@@ -7,23 +7,45 @@ public class Player : MonoBehaviour {
     public int playerIndex { get { return input.myPlayerIndex; } }
 
     public int points = 0;
+    
+    public Color color = Color.white;
 
-    [SerializeField] private Color color = Color.white;
+    [SerializeField] private SpriteRenderer indicator;
     [SerializeField] private float speed = 10;
     [SerializeField] private float maxVelocityChange = 10.0f;
 
     
     private PlayerInput input;
     private new Rigidbody rigidbody;
+    private new Animator animator;
 
 
     void Awake()
     {
         input = this.GetComponent<PlayerInput>();
         rigidbody = this.GetComponent<Rigidbody>();
+        animator = this.GetComponentInChildren<Animator>();
+
+        if (!indicator)
+            Debug.Log("Please assing the child who has sprite renderer to be indicator");
+        else
+        {
+            indicator.color = color;
+        }
 
         points = 0;
         rigidbody.freezeRotation = true;
+    }
+
+    void Update()
+    {
+        UpdateAnimator();
+    }
+
+    void UpdateAnimator()
+    {
+        animator.SetFloat("Horizontal", input.axisHorizontal);
+        animator.SetFloat("Vertical", input.axisVertical);
     }
 
     void FixedUpdate()
