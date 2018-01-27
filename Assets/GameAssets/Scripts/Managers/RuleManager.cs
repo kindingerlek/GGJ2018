@@ -7,7 +7,7 @@ public class RuleManager : MonoBehaviour
 {
 
 
-    public enum infectationsTypes { red, blue, green, brown };
+    public enum infectationsTypes { red = 1, blue, green, brown };
 
 
     int[] diseasesRule = { (int)infectationsTypes.red, (int)infectationsTypes.blue, (int)infectationsTypes.green, (int)infectationsTypes.brown };
@@ -34,8 +34,8 @@ public class RuleManager : MonoBehaviour
     public int CompareInfectation(Infectable infect1, Infectable infect2)
     {
 
-        int d1 = infect1.GetInfectationType();
-        int d2 = infect2.GetInfectationType();
+        int d1 = infect1.infectedBy.GetComponent<Player>().playerIndex;
+        int d2 = infect2.infectedBy.GetComponent<Player>().playerIndex;
         int d1Pos = 0;
         int d2Pos = 0;
 
