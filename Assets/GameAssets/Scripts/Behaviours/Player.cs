@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-    
+
     public int playerIndex { get { return input.myPlayerIndex; } }
 
     public int points = 0;
@@ -13,8 +14,12 @@ public class Player : MonoBehaviour {
     [SerializeField] private SpriteRenderer indicator;
     [SerializeField] private float speed = 10;
     [SerializeField] private float maxVelocityChange = 10.0f;
+    [SerializeField] private float stealPointsPerSecond = 1;
+    [SerializeField] Collider effectArea;
 
-    
+    readonly HashSet<Player> playersInArea = new HashSet<Player>();
+    readonly Dictionary<Player, float> stealCredits = new Dictionary<Player, float>();
+
     private PlayerInput input;
     private new Rigidbody rigidbody;
     private new Animator animator;
@@ -62,16 +67,75 @@ public class Player : MonoBehaviour {
         velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
         velocityChange.y = 0;
         rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+
+        UpdatePlayerArea();
+    }
+
+    void UpdatePlayerArea()
+    {
+        bool updated = false;
+        foreach(var otherPlayer in playersInArea) {
+            if (otherPlayer.points > points)
+                continue;
+
+            var pointsToSteal = Mathf.Min(otherPlayer.points, Time.fixedDeltaTime * stealPointsPerSecond);
+            if (pointsToSteal <= 0)
+                continue;
+
+            if (!stealCredits.ContainsKey(otherPlayer))
+                stealCredits[otherPlayer] = pointsToSteal;
+            else
+                stealCredits[otherPlayer] += pointsToSteal;
+
+            int steal = (int)stealCredits[otherPlayer];
+            if (steal > 0) {
+                StealPoints(otherPlayer, steal);
+            }
+        }
+
+        if (updated) {
+            GameManager.Instance.UpdatePoints();
+        }
+    }
+
+    void StealPoints(Player otherPlayer, int points)
+    {
+        stealCredits[otherPlayer] -= points;
+        var steal = GameManager.Instance.infectables
+            .Where(i => i.infectedBy == otherPlayer)
+            .OrderByDescending(i => Vector3.SqrMagnitude(i.transform.position - transform.position))
+            .Take(points);
+
+        foreach (var i in steal) {
+            i.Infect(this);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         Infectable infectable = collision.gameObject.GetComponent<Infectable>();
 
-        if (infectable == null)
-            return;
+        if (infectable != null)
+            infectable.Infect(this);
+    }
 
-        infectable.Infect(this.gameObject);
-            
+    void OnTriggerEnter(Collider other)
+    {
+        Player otherPlayer = other.gameObject.GetComponent<Player>();
+
+        if (otherPlayer != null) {
+            playersInArea.Add(otherPlayer);
+            otherPlayer.playersInArea.Add(this);
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        Player otherPlayer = other.gameObject.GetComponent<Player>();
+
+        if (otherPlayer != null) {
+            playersInArea.Remove(otherPlayer);
+            otherPlayer.playersInArea.Remove(this);
+        }
     }
 }
