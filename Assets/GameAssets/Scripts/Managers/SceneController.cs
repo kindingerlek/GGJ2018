@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-
+    
     
     // Use this for initialization
     void Start()
@@ -23,5 +23,9 @@ public class SceneController : MonoBehaviour
 
     public void Configuration() {
         SceneManager.LoadScene("configuration");
+    }
+
+    public void Back() {
+        SceneManager.LoadScene("menu");
     }
 }

@@ -4,67 +4,82 @@ using System.Reflection;
 using UnityEngine;
 
 public class PlayerInput : MonoBehaviour {
+    public int myPlayerIndex;
 
-    public bool storePlayerPref = true;
-    public KeyInput[] CustomKeys;
-    public AxisInput[] CustomAxis;
-    private bool hasInitilized;
+    [Space(15)]
 
-    void Start()
+    [SerializeField] private string upKey        = "Xbox{0}LStickUp";
+    [SerializeField] private string downKey      = "Xbox{0}LStickDown";
+    [SerializeField] private string leftKey      = "Xbox{0}LStickLeft";
+    [SerializeField] private string rightKey     = "Xbox{0}LStickRight";
+    [SerializeField] private string lookUpKey    = "Xbox{0}RStickUp";
+    [SerializeField] private string lookDownKey  = "Xbox{0}RStickDown";
+    [SerializeField] private string lookLeftKey  = "Xbox{0}RStickLeft";
+    [SerializeField] private string lookRightKey = "Xbox{0}RStickRight";
+    [SerializeField] private string attackKey    = "Xbox{0}A";
+    [SerializeField] private string defenceKey   = "Xbox{0}B";
+
+    // Inputs Variables
+    [HideInInspector] public float axisHorizontal;
+    [HideInInspector] public float axisVertical;
+    [HideInInspector] public float axisLookHorizontal;
+    [HideInInspector] public float axisLookVertical;
+
+    [HideInInspector] public bool attack;
+    [HideInInspector] public bool attackDown;
+
+    [HideInInspector] public bool defence;
+    [HideInInspector] public bool defenceDown;
+
+    [HideInInspector] public bool isAxisOn { get { return axisDirectionClamped.sqrMagnitude > 0.05f; } }
+
+    [HideInInspector] public Vector2 axisDirection = new Vector2();
+    [HideInInspector] public Vector2 axisDirectionClamped = new Vector2();
+
+    [HideInInspector] public Vector3 worldAxisDirection = new Vector3();
+    [HideInInspector] public Vector3 worldAxisDirectionClamped = new Vector3();
+
+    public void Awake()
     {
+        myPlayerIndex = GameManager.Instance.AddPlayer(this.GetComponent<Player>()) + 1 ;
+
         InitInput();
     }
 
-    private void InitInput()
+    public void InitInput()
     {
-        if (hasInitilized)
-            return;
+        int i = myPlayerIndex;
 
-        if (CustomKeys == null || CustomAxis == null)
-            return;
+        cInput.SetKey(string.Format("P{0} Up",         i), GetStringFromKeys(string.Format(upKey, i)));
+        cInput.SetKey(string.Format("P{0} Down",       i), GetStringFromKeys(string.Format(downKey, i)));
+        cInput.SetKey(string.Format("P{0} Left",       i), GetStringFromKeys(string.Format(leftKey, i)));
+        cInput.SetKey(string.Format("P{0} Right",      i), GetStringFromKeys(string.Format(rightKey, i)));
+        cInput.SetKey(string.Format("P{0} Look Up",    i), GetStringFromKeys(string.Format(lookUpKey, i)));
+        cInput.SetKey(string.Format("P{0} Look Down",  i), GetStringFromKeys(string.Format(lookDownKey, i)));
+        cInput.SetKey(string.Format("P{0} Look Left",  i), GetStringFromKeys(string.Format(lookLeftKey, i)));
+        cInput.SetKey(string.Format("P{0} Look Right", i), GetStringFromKeys(string.Format(lookRightKey, i)));
+        cInput.SetKey(string.Format("P{0} Attack",     i), GetStringFromKeys(string.Format(attackKey, i)));
+        cInput.SetKey(string.Format("P{0} Defence",    i), GetStringFromKeys(string.Format(defenceKey, i)));
 
-        cInput.usePlayerPrefs = storePlayerPref;
 
-        // Initializing Keys        
-        for (int i = 0; i < CustomKeys.Length; i++)
-        {
-            KeyInput key = CustomKeys[i];
+        cInput.SetAxis(string.Format("P{0} Horizontal",      i),
+            string.Format("P{0} Up",   i),
+            string.Format("P{0} Down", i));
 
-            if (key.action.Length == 0 || key.defPrimary.Length == 0)
-                Debug.LogError("Please define a name or primary key to key: " + i);
-            else
-                cInput.SetKey
-                (
-                    key.action,
-                    GetStringFromKeys(key.defPrimary),
-                    GetStringFromKeys(key.defSecondary)
-                );
-        }
+        cInput.SetAxis(string.Format("P{0} Vertical",        i),
+            string.Format("P{0} Right", i),
+            string.Format("P{0} Left",  i));
 
-        // Initializing Axis
-        for (int i = 0; i < CustomAxis.Length; i++)
-        {
-            AxisInput axis = CustomAxis[i];
+        cInput.SetAxis(string.Format("P{0} Look Horizontal", i),
+            string.Format("P{0} Look Up",   i),
+            string.Format("P{0} Look Down", i));
 
-            if (axis.name.Length == 0 || axis.negative.Length == 0 || axis.positive.Length == 0)
-                Debug.LogError("Please define a name, negative key or positive key to axis: " + i);
-            else
-                cInput.SetAxis
-                (
-                    axis.name,
-                    axis.negative,
-                    axis.positive,
-                    axis.sensitivity,
-                    axis.gravity,
-                    axis.deadzone
-                );
-        }
-
-        hasInitilized = true;
+        cInput.SetAxis(string.Format("P{0} Look Vertical",   i),
+            string.Format("P{0} Look Right", i),
+            string.Format("P{0} Look Left",  i));
     }
-    
 
-    public string GetStringFromKeys(string keyName)
+    public static string GetStringFromKeys(string keyName)
     {
         FieldInfo field = typeof(Keys).GetField(keyName);
         PropertyInfo property = typeof(Keys).GetProperty(keyName);
@@ -76,60 +91,21 @@ public class PlayerInput : MonoBehaviour {
         return null;
     }
 
-    [System.Serializable]
-    public class KeyInput
-    {
-        public string action;
-        public string defPrimary;
-        public string defSecondary;
-
-        public void SetDefault()
-        {
-            cInput.ChangeKey(action, defPrimary, defSecondary);
-        }
-    }
-
-    [System.Serializable]
-    public class AxisInput
-    {
-        public string name;             //The description of what the axis is used for.
-        public string positive;         //The input which provides the positive value of the axis.
-        public string negative;         //The input which provides the negative value of the axis.
-        [Range(0, 10)]
-        public float sensitivity = 3f;      //Optional. The sensitivity for this axis. Default is 3.
-        [Range(0, 10)]
-        public float gravity = 3f;          //Optional. How fast the axis returns to 0 when input stops. Default is 3.
-        [Range(0, 01)]
-        public float deadzone = 0.001f; //Optional. How fast the axis returns to 0 when input stops. Default is 0.001.
-    }
-
-
-
-
-
-    // Inputs Variables
-    [HideInInspector] public float axisHorizontal;
-    [HideInInspector] public float axisVertical;
-    [HideInInspector] public bool action1;
-    [HideInInspector] public bool action1Down;
-    [HideInInspector] public bool isAxisOn { get { return axisDirectionClamped.sqrMagnitude > 0.05f; } }
-
-    [HideInInspector] public Vector2 axisDirection = new Vector2();
-    [HideInInspector] public Vector2 axisDirectionClamped = new Vector2();
-
-    [HideInInspector] public Vector3 worldAxisDirection = new Vector3();
-    [HideInInspector] public Vector3 worldAxisDirectionClamped = new Vector3();
-
-
 
     public void Update()
     {
-        action1Down = cInput.GetButtonDown("Action 1");
-        action1 = cInput.GetButton("Action 1");
+        attackDown = cInput.GetButtonDown(string.Format("P{0} Attack", myPlayerIndex));
+        attack     = cInput.GetButton(    string.Format("P{0} Attack", myPlayerIndex));
 
-        axisHorizontal = cInput.GetAxis("Horizontal");
-        axisVertical = cInput.GetAxis("Vertical");
+        defenceDown = cInput.GetButtonDown(string.Format("P{0} Defence", myPlayerIndex));
+        defence     = cInput.GetButton(    string.Format("P{0} Defence", myPlayerIndex));
+
+        axisHorizontal = cInput.GetAxis(string.Format("P{0} Horizontal", myPlayerIndex));
+        axisVertical   = cInput.GetAxis(string.Format("P{0} Vertical",   myPlayerIndex));
         
+        axisLookHorizontal = cInput.GetAxis(string.Format("P{0} Look Horizontal", myPlayerIndex));
+        axisLookVertical   = cInput.GetAxis(string.Format("P{0} Look Vertical",   myPlayerIndex));
+
         axisDirection.Set(axisHorizontal, axisVertical);
         axisDirectionClamped = axisDirection.SquareToCircleClamp();
 

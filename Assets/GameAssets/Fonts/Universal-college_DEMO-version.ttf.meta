@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 15bbfa619d9004274b9dc99dd73d4501
+timeCreated: 1517027417
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Universal-college_DEMO-version
+  fontNames:
+  - Universal-college_DEMO-version
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
