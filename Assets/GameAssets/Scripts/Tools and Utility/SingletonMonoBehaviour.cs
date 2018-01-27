@@ -144,6 +144,9 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : Single
     protected virtual void OnDestroy()
     {
         m_isQuitting = true;
-        m_hasInstance = false;
+        if (m_hasInstance && m_instance == this) {
+            m_hasInstance = false;
+            m_hasInstance = default(T);
+        }
     }
 }
