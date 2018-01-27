@@ -46,6 +46,8 @@ public class PlayerInput : MonoBehaviour {
         else
             GameManager.Instance.players[myPlayerIndex] = this.GetComponent<Player>();
 
+        transform.name = "Player " + myPlayerIndex;
+
         InitInput();
     }
 

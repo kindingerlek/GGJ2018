@@ -19,6 +19,9 @@ public class Infectable : MonoBehaviour {
 
     public void Infect(GameObject infector)
     {
+        if (infectedBy.GetInstanceID() == infector.GetInstanceID())
+            return;
+        
         Debug.Log(this.name + ": I was infected by " + infector.name);
         infectedBy = infector;
 
