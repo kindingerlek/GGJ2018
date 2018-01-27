@@ -13,7 +13,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
     }
 
 
-    public List<Player> players;
+    public List<Player> players = new List<Player>();
 
     public int AddPlayer(Player player)
     {
@@ -23,7 +23,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
             return -1;
 
         players.Add(player);
-        player.playerIndex = count;
 
         return count;
     }
