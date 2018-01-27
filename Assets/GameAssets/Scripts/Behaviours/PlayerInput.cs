@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -20,24 +21,24 @@ public class PlayerInput : MonoBehaviour {
     [SerializeField] private string defenceKey   = "Xbox{0}B";
 
     // Inputs Variables
-    [HideInInspector] public float axisHorizontal;
-    [HideInInspector] public float axisVertical;
-    [HideInInspector] public float axisLookHorizontal;
-    [HideInInspector] public float axisLookVertical;
+    [NonSerialized] public float axisHorizontal;
+    [NonSerialized] public float axisVertical;
+    [NonSerialized] public float axisLookHorizontal;
+    [NonSerialized] public float axisLookVertical;
 
-    [HideInInspector] public bool attack;
-    [HideInInspector] public bool attackDown;
+    [NonSerialized] public bool attack;
+    [NonSerialized] public bool attackDown;
 
-    [HideInInspector] public bool defence;
-    [HideInInspector] public bool defenceDown;
+    [NonSerialized] public bool defence;
+    [NonSerialized] public bool defenceDown;
 
-    [HideInInspector] public bool isAxisOn { get { return axisDirectionClamped.sqrMagnitude > 0.0001f; } }
+    public bool isAxisOn { get { return axisDirectionClamped.sqrMagnitude > 0.0001f; } }
 
-    [HideInInspector] public Vector2 axisDirection = new Vector2();
-    [HideInInspector] public Vector2 axisDirectionClamped = new Vector2();
+    [NonSerialized] public Vector2 axisDirection = new Vector2();
+    [NonSerialized] public Vector2 axisDirectionClamped = new Vector2();
 
-    [HideInInspector] public Vector3 worldAxisDirection = new Vector3();
-    [HideInInspector] public Vector3 worldAxisDirectionClamped = new Vector3();
+    [NonSerialized] public Vector3 worldAxisDirection = new Vector3();
+    [NonSerialized] public Vector3 worldAxisDirectionClamped = new Vector3();
 
     public void Awake()
     {
