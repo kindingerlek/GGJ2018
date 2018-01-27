@@ -3,69 +3,72 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class RuleManager : MonoBehaviour
+public class RuleManager : SingletonMonoBehaviour<RuleManager>
 {
 
 
-    public enum infectationsTypes { red = 1, blue, green, brown };
+    public enum infectationsTypes { P1 = 1, P2, P3, P4 };
+    public enum collisionType { MeInfectOther, Nothing , OtherInfectMe };
 
-    [SerializeField]
-    int[] diseasesRule = { 0, (int)infectationsTypes.red, (int)infectationsTypes.blue, (int)infectationsTypes.green, (int)infectationsTypes.brown };
-
-
-    static RuleManager() {
-    }
-    // Use this for initialization
-    void Start()
+    static RuleManager()
     {
-
+        Lazy = false;
+        FindInactive = true;
+        DestroyOthers = true;
+        Persist = true;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
 
-    }
+    [SerializeField] //                            0                        1                  2                     3
+    infectationsTypes[] infectionRole = { infectationsTypes.P1, infectationsTypes.P2, infectationsTypes.P3, infectationsTypes.P4 };
+    
 
     public void NextRules() {
-        diseasesRule.Shuffle();
+        infectionRole.Shuffle();
     }
 
-    public int[] GetRules(){
-        return diseasesRule;
+    public infectationsTypes[] GetRules(){
+        return infectionRole;
     }
 
 
-    public int CompareInfectation(int infect1, int infect2)
+    public collisionType CompareInfectation(int infect1, int infect2)
     {
 
-        int d1Pos = 1;
-        int d2Pos = 1;
+        int indexInfect1 = 0;
 
         if (infect1 == 0 && infect2 == 0) {
-            return 0;
+            return collisionType.Nothing;
         }
-        for (int i = 1; i < diseasesRule.Length; i++) {
-            if (diseasesRule[i] == infect1) {
-                d1Pos = i;
-                continue;
-            }
-        
-            if (diseasesRule[i] == infect2)
-            {
-                d2Pos = i;
+
+        if (infect1 == 0) {
+            return collisionType.OtherInfectMe;
+        } else if (infect2 == 0) {
+            return collisionType.MeInfectOther;
+        }
+
+
+        for (int i = 1; i < infectionRole.Length; i++) {
+            if (infectionRole[i] == (infectationsTypes) infect1) {
+                indexInfect1 = i;
+                break;
             }
         }
 
-        if (d1Pos +1 == d2Pos|| (d1Pos==4 && d2Pos==1) ||infect2 == 0) {
-            return 1;
+        int nextCheck = (indexInfect1 + 1) % 4;
+        int previousCheck = (indexInfect1 - 1) < 0 ? indexInfect1 + 3 : indexInfect1 - 1;
+
+
+        //Check if I can infect the other
+        if (infectionRole[nextCheck] == (infectationsTypes) infect2){
+            return collisionType.MeInfectOther;
         }
 
-        if (d2Pos + 1 == d1Pos || (d2Pos == 4 && d1Pos == 1) || infect1 == 0)
+        if (infectionRole[previousCheck] == (infectationsTypes) infect2)
         {
-            return -1;
+            return collisionType.OtherInfectMe;
         }
 
-        return 0;
+        return collisionType.Nothing;
     }
 }
