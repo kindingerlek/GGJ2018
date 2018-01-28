@@ -34,6 +34,11 @@ public class RuleManager : SingletonMonoBehaviour<RuleManager>
         }
     }
 
+    public int GetRule(int index)
+    {
+        return infectionRole[index];
+    }
+
     public void NextRules() {
         reshuffle(infectionRole);
     }

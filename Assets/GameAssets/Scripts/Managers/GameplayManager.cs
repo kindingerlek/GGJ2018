@@ -14,6 +14,7 @@ public class GameplayManager : SingletonMonoBehaviour<GameplayManager> {
     [SerializeField] Text P2Score;
     [SerializeField] Text P3Score;
     [SerializeField] Text P4Score;
+    [SerializeField] Image[] Rules;
 
     static GameplayManager()
     {
@@ -40,7 +41,7 @@ public class GameplayManager : SingletonMonoBehaviour<GameplayManager> {
     {
         base.Awake();
         UpdatePoints();
-        InvokeRepeating("ChangeRules", 5, 10);
+        InvokeRepeating("ChangeRules", 0, 15);
     }
 
     public void Update()
@@ -58,5 +59,8 @@ public class GameplayManager : SingletonMonoBehaviour<GameplayManager> {
     void ChangeRules()
     {
         RuleManager.Instance.NextRules();
+        for (int i = 0; i < 4; i++) {
+            Rules[(i + 1) % 4].color = GameManager.Instance.GetPlayerColor(RuleManager.Instance.GetRule(i));
+        }
     }
 }
