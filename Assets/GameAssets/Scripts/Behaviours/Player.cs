@@ -14,6 +14,7 @@ public class Player : MonoBehaviour {
     [SerializeField] private float maxVelocityChange = 10.0f;
     [SerializeField] private float stealPointsPerSecond = 1;
     [SerializeField] Collider effectArea;
+    [SerializeField] private AudioClip dieAudio;
 
     readonly HashSet<Player> playersInArea = new HashSet<Player>();
     readonly Dictionary<Player, float> stealCredits = new Dictionary<Player, float>();
@@ -21,7 +22,7 @@ public class Player : MonoBehaviour {
     private PlayerInput input;
     private new Rigidbody rigidbody;
     private new Animator animator;
-
+    private Vector3 respawnPosition;
 
     void Awake()
     {
@@ -35,6 +36,8 @@ public class Player : MonoBehaviour {
         {
             indicator.color = GameManager.Instance.getPlayerColor(playerIndex);
         }
+
+        respawnPosition = this.transform.position;
 
         points = 0;
         rigidbody.freezeRotation = true;
@@ -135,5 +138,12 @@ public class Player : MonoBehaviour {
             playersInArea.Remove(otherPlayer);
             otherPlayer.playersInArea.Remove(this);
         }
+    }
+
+    public void Die()
+    {
+        if(dieAudio)
+            AudioSource.PlayClipAtPoint(dieAudio, Camera.main.transform.position);
+        transform.position = respawnPosition;
     }
 }
