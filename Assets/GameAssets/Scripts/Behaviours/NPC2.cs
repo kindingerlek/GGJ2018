@@ -67,8 +67,8 @@ public class NPC2 : MonoBehaviour {
     {
         direction = transform.position - lastFramePosition;
 
-        animator.SetFloat("Horizontal", direction.normalized.x);
-        animator.SetFloat("Vertical", direction.normalized.z);
+        animator.SetFloat("Horizontal", direction.normalized.x, 0.1f, Time.deltaTime);
+        animator.SetFloat("Vertical", direction.normalized.z, 0.1f, Time.deltaTime);
 
         lastFramePosition = transform.position;
     }
