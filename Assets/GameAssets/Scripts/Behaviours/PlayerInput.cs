@@ -126,6 +126,7 @@ public class PlayerInput : MonoBehaviour {
         worldAxisDirectionClamped = worldAxisDirection.CubeToSphereClamp();
     }
 
+
     public Vector3 JoystickRelativeToCamera()
     {
         Vector3 tempTarget =
