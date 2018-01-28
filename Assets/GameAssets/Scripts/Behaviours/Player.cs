@@ -114,7 +114,7 @@ public class Player : MonoBehaviour {
         Infectable infectable = collision.gameObject.GetComponent<Infectable>();
 
         if (infectable != null)
-            infectable.Infect(this);
+            infectable.ValidateInfectioPlayer(this);
     }
 
     void OnTriggerEnter(Collider other)
