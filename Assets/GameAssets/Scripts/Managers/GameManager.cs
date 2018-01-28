@@ -26,14 +26,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
 
     public void SetPlayerPrefab(int i, GameObject prefab)
     {
-        PlayerSprites[i] = prefab;
+        PlayerSprites[i-1] = prefab;
     }
 
     public GameObject GetPlayerSpritePrefab(int i)
     {
         if (i <= 0 || i > PlayerSprites.Length)
             return null;
-        return PlayerSprites[i];
+        return PlayerSprites[i-1];
     }
 
     public bool GetPlayerEnabled(int player) {
