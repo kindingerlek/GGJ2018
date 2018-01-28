@@ -33,7 +33,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
     {
         if (i <= 0 || i > PlayerSprites.Length)
             return null;
-        return PlayerSprites[i];
+        return PlayerSprites[i - 1];
     }
 
     public bool GetPlayerEnabled(int player) {

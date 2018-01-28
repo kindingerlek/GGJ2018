@@ -54,6 +54,12 @@ public class CharacterSelectionManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if (Input.GetKey(KeyCode.Return)) {
+			foreach (var ch in Characters) {
+				ConfirmedSelections[ch.PlayerIndex] = ch.CurrentSprite;
+				SceneManager.LoadScene("gameplay");
+			}
+		}
 		if ((Input.GetKey(KeyCode.Return) && ConfirmedSelections.Any()) || ConfirmedSelections.Count >= Characters.Count) {
 			SceneManager.LoadScene("gameplay");
 		}
