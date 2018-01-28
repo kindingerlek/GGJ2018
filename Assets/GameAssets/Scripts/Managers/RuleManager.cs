@@ -21,6 +21,7 @@ public class RuleManager : SingletonMonoBehaviour<RuleManager>
 
     [SerializeField] //                            0                        1                  2                     3
     int[] infectionRole = { (int)infectationsTypes.P1, (int)infectationsTypes.P2, (int)infectationsTypes.P3, (int)infectationsTypes.P4 };
+    private float nextTimeToSum;
 
     private void reshuffle(int[] infectionRole)
     {
@@ -41,9 +42,12 @@ public class RuleManager : SingletonMonoBehaviour<RuleManager>
 
     public void NextRules() {
         reshuffle(infectionRole);
-    }
 
-  
+        foreach (Player player in GameplayManager.Instance.players)
+            player.points += player.dominations;
+
+        GameplayManager.Instance.UpdatePoints();
+    } 
 
 
     public collisionType CompareInfectation(int infect1, int infect2)

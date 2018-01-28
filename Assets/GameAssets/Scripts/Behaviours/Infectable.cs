@@ -75,13 +75,13 @@ public class Infectable : MonoBehaviour {
             return;
 
         if (infectedBy != null) {
-            infectedBy.points -= 1;
+            infectedBy.dominations -= 1;
         }
 
         infectedBy = other;
 
         if (infectedBy) {
-            infectedBy.points += 1;
+            infectedBy.dominations += 1;
         }
 
         GetComponent<NPC2>().npcIndicator.color = GameManager.Instance.GetPlayerColor(other.playerIndex);

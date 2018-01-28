@@ -7,7 +7,9 @@ public class Player : MonoBehaviour {
 
     public int playerIndex { get { return input.myPlayerIndex; } }
 
+    public int dominations = 0;
     public int points = 0;
+
 
     [SerializeField] private GameObject spriteRoot;
     [SerializeField] private SpriteRenderer indicator;
@@ -38,7 +40,7 @@ public class Player : MonoBehaviour {
 
         respawnPosition = this.transform.position;
 
-        points = 0;
+        dominations = 0;
     }
 
     void Start()
@@ -96,10 +98,10 @@ public class Player : MonoBehaviour {
     {
         bool updated = false;
         foreach(var otherPlayer in playersInArea) {
-            if (otherPlayer.points < points)
+            if (otherPlayer.dominations < dominations)
                 continue;
 
-            var pointsToSteal = Mathf.Min(otherPlayer.points, Time.fixedDeltaTime * stealPointsPerSecond);
+            var pointsToSteal = Mathf.Min(otherPlayer.dominations, Time.fixedDeltaTime * stealPointsPerSecond);
             if (pointsToSteal <= 0)
                 continue;
 
@@ -119,13 +121,13 @@ public class Player : MonoBehaviour {
         }
     }
 
-    void StealPoints(Player otherPlayer, int points)
+    void StealPoints(Player otherPlayer, int dominations)
     {
-        stealCredits[otherPlayer] -= points;
+        stealCredits[otherPlayer] -= dominations;
         var steal = GameplayManager.Instance.infectables
             .Where(i => i.infectedBy == otherPlayer)
             .OrderByDescending(i => Vector3.SqrMagnitude(i.transform.position - transform.position))
-            .Take(points);
+            .Take(dominations);
 
         foreach (var i in steal) {
             i.Infect(this);

@@ -50,10 +50,21 @@ public class GameplayManager : SingletonMonoBehaviour<GameplayManager> {
 
     public void UpdatePoints()
     {
-        P1Score.text = "P1: " + players[0].points;
-        P2Score.text = "P2: " + players[1].points;
-        P3Score.text = "P3: " + players[2].points;
-        P4Score.text = "P4: " + players[3].points;
+        P1Score.color = GameManager.Instance.GetPlayerColor(1);
+        P1Score.rectTransform.Find("Dominations").GetComponent<Text>().text = "Dominations: " + players[0].dominations;
+        P1Score.rectTransform.Find("Dominations/Score").GetComponent<Text>().text = "Score: " + players[0].points;
+
+        P2Score.color = GameManager.Instance.GetPlayerColor(2);
+        P2Score.rectTransform.Find("Dominations").GetComponent<Text>().text = "Dominations: " + players[1].dominations;
+        P2Score.rectTransform.Find("Dominations/Score").GetComponent<Text>().text = "Score: " + players[1].points;
+
+        P3Score.color = GameManager.Instance.GetPlayerColor(3);
+        P3Score.rectTransform.Find("Dominations").GetComponent<Text>().text = "Dominations: " + players[2].dominations;
+        P3Score.rectTransform.Find("Dominations/Score").GetComponent<Text>().text = "Score: " + players[2].points;
+
+        P4Score.color = GameManager.Instance.GetPlayerColor(4);
+        P4Score.rectTransform.Find("Dominations").GetComponent<Text>().text = "Dominations: " + players[3].dominations;
+        P4Score.rectTransform.Find("Dominations/Score").GetComponent<Text>().text = "Score: " + players[3].points;
     }
 
     void ChangeRules()
