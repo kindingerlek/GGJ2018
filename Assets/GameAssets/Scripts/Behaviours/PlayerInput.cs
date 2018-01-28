@@ -43,16 +43,19 @@ public class PlayerInput : MonoBehaviour {
 
     public void Awake()
     {
+        transform.name = "Player " + myPlayerIndex;
+
+        InitInput();
+    }
+
+    void Start()
+    {
         if (registerPlayer) {
             if (myPlayerIndex == 0)
                 myPlayerIndex = GameplayManager.Instance.AddPlayer(this.GetComponent<Player>()) + 1;
             else
                 GameplayManager.Instance.players[myPlayerIndex-1] = this.GetComponent<Player>();
         }
-
-        transform.name = "Player " + myPlayerIndex;
-
-        InitInput();
     }
 
     public void InitInput()

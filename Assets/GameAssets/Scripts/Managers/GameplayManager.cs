@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameplayManager : SingletonMonoBehaviour<GameplayManager> {
+public class GameplayManager : MonoBehaviour {
 
     public float timeToChangeRule;
     public List<Player> players = new List<Player>();
@@ -16,12 +16,30 @@ public class GameplayManager : SingletonMonoBehaviour<GameplayManager> {
     [SerializeField] Text P4Score;
     [SerializeField] Image[] Rules;
 
-    static GameplayManager()
+    public static GameplayManager Instance;
+
+    /// <summary>
+    /// Awake is called when the script instance is being loaded.
+    /// </summary>
+    void Awake()
     {
-        Lazy = false;
-        FindInactive = true;
-        DestroyOthers = DestroyOptions.DestroyGameObject;
-        Persist = true;
+        if (Instance != null) 
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
+    /// <summary>
+    /// This function is called when the MonoBehaviour will be destroyed.
+    /// </summary>
+    void OnDestroy()
+    {
+        if (Instance == this) {
+            Instance = null;
+        }
     }
 
     public int AddPlayer(Player player)
@@ -36,9 +54,8 @@ public class GameplayManager : SingletonMonoBehaviour<GameplayManager> {
         return count;
     }
 
-    protected override void Awake()
+    void Start()
     {
-        base.Awake();
         UpdatePoints();
         InvokeRepeating("ChangeRules", 0, 15);
     }
