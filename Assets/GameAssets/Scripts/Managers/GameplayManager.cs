@@ -47,6 +47,15 @@ public class GameplayManager : SingletonMonoBehaviour<GameplayManager> {
     {
     }
 
+    public void ChangeInfectableOwner(Player playerOrigin, Player playerDest) {
+        for (int i = 0; i < infectables.Count; i++) {
+            if(infectables[i].infectedBy != null && infectables[i].infectedBy.GetComponent<Player>().playerIndex == playerOrigin.playerIndex)
+            {
+                infectables[i].Infect(playerDest);
+            }
+        } 
+    }
+
     public void UpdatePoints()
     {
         P1Score.text = "P1: " + players[0].points;
