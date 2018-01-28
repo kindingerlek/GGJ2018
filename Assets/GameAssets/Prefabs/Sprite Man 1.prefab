@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212935726383848442}
   - component: {fileID: 95328646318348084}
   m_Layer: 0
-  m_Name: Sprite Man
+  m_Name: Sprite Man 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
