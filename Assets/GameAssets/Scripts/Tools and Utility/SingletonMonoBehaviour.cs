@@ -143,10 +143,17 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : Single
     /// </summary>
     protected virtual void OnDestroy()
     {
-        m_isQuitting = true;
-        if (m_hasInstance && m_instance == this) {
+        if (m_hasInstance && m_instance == (T)this) {
             m_hasInstance = false;
-            m_hasInstance = default(T);
+            m_instance = default(T);
         }
+    }
+
+    /// <summary>
+    /// Callback sent to all game objects before the application is quit.
+    /// </summary>
+    void OnApplicationQuit()
+    {
+        m_isQuitting = true;
     }
 }

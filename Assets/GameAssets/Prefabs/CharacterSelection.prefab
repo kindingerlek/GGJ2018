@@ -245,20 +245,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AvailableSprites:
   - Sprite: {fileID: 21300000, guid: f8694230653fa784ab26453f2d031119, type: 3}
-    Name: Character 1
-    GameplaySpritePrefab: {fileID: 1590670645536186, guid: a0f674d5052524b91b4d6c44e9677563,
-      type: 2}
-  - Sprite: {fileID: 21300004, guid: 8697b7030a47d4d4a879b162d006f4f0, type: 3}
-    Name: Character 2
+    Name: Man 1
     GameplaySpritePrefab: {fileID: 1590670645536186, guid: a0f674d5052524b91b4d6c44e9677563,
       type: 2}
   - Sprite: {fileID: 21300000, guid: 31b6ba0d503ed9347904f04042975d81, type: 3}
-    Name: Character 3
-    GameplaySpritePrefab: {fileID: 1590670645536186, guid: a0f674d5052524b91b4d6c44e9677563,
+    Name: Grandma 1
+    GameplaySpritePrefab: {fileID: 1027676812730660, guid: 8434adaf22fcd4f93be07ea9cd02943c,
       type: 2}
-  - Sprite: {fileID: 21300002, guid: 5899f2060a3ddd24795895c09cb53e26, type: 3}
-    Name: Character 4
-    GameplaySpritePrefab: {fileID: 1590670645536186, guid: a0f674d5052524b91b4d6c44e9677563,
+  - Sprite: {fileID: 21300000, guid: cfffeb32d45634d258b5edb76cd328f5, type: 3}
+    Name: Man 2
+    GameplaySpritePrefab: {fileID: 1590670645536186, guid: 290c7089495f041fa845cd14486dbf78,
+      type: 2}
+  - Sprite: {fileID: 21300000, guid: fa619eca51a8144e38af7b131703b41b, type: 3}
+    Name: Grandma 2
+    GameplaySpritePrefab: {fileID: 1027676812730660, guid: 7f7fbf715ef07432f953f71a8dbc46b2,
       type: 2}
   SelectedIndex: -1
   TempImage1: {fileID: 114727181432271630}

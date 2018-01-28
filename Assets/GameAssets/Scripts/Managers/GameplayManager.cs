@@ -20,10 +20,9 @@ public class GameplayManager : SingletonMonoBehaviour<GameplayManager> {
     {
         Lazy = false;
         FindInactive = true;
-        DestroyOthers = DestroyOptions.DestroyBehaviour;
+        DestroyOthers = DestroyOptions.DestroyGameObject;
         Persist = true;
     }
-    
 
     public int AddPlayer(Player player)
     {
