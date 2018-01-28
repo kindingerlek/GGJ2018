@@ -47,7 +47,7 @@ public class CharacterSelection : MonoBehaviour {
 	bool temp1InUse = true;
 
 	public int PlayerIndex { get { return playerInput.myPlayerIndex; } }
-	public Sprite CurrentSprite { get { return AvailableSprites[SelectedIndex].Sprite; } }
+	public CharacterConfig CurrentSprite { get { return AvailableSprites[SelectedIndex]; } }
 
 	void Awake()
 	{

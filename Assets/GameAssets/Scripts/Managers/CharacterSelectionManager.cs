@@ -56,8 +56,11 @@ public class CharacterSelectionManager : MonoBehaviour {
 	void Update () {
 		if (Input.GetKey(KeyCode.Return)) {
 			foreach (var ch in Characters) {
-				ConfirmedSelections[ch.PlayerIndex] = ch.CurrentSprite;
+				ConfirmedSelections[ch.PlayerIndex] = ch.CurrentSprite.Sprite;
 				SceneManager.LoadScene("gameplay");
+
+				GameManager.Instance.SetPlayerPrefab(ch.PlayerIndex, ch.CurrentSprite.GameplaySpritePrefab);
+				GameManager.Instance.SetPlayerEnabled(ch.PlayerIndex, true);
 			}
 		}
 		if ((Input.GetKey(KeyCode.Return) && ConfirmedSelections.Any()) || ConfirmedSelections.Count >= Characters.Count) {
