@@ -18,7 +18,7 @@ public class Player : MonoBehaviour {
     [SerializeField] private float stealPointsPerSecond = 1;
     [SerializeField] Collider effectArea;
     [SerializeField] private AudioClip dieAudio;
-
+    private bool bodyShootActive = false;
     readonly HashSet<Player> playersInArea = new HashSet<Player>();
     readonly Dictionary<Player, float> stealCredits = new Dictionary<Player, float>();
 
@@ -26,10 +26,17 @@ public class Player : MonoBehaviour {
     private new Rigidbody rigidbody;
     private new Animator animator;
     private Vector3 respawnPosition;
+    private Player lastHitPlayer;
+    private float timeHitPLayer;
 
     void Awake()
     {
         input = this.GetComponent<PlayerInput>();
+
+        if (!GameManager.Instance.GetPlayerEnabled(input.myPlayerIndex)) {
+            Destroy(gameObject);
+            return;
+        }
 
         if (!indicator)
             Debug.Log("Please assing the child who has sprite renderer to be indicator");
@@ -52,22 +59,46 @@ public class Player : MonoBehaviour {
         rigidbody.freezeRotation = true;
     }
 
+    void BodyShoot()
+    {
+        if (!bodyShootActive)
+        {
+            bodyShootActive = true;
+            speed = 30;
+            Invoke("BodyShootBack", 0.4f);
+        }
+    }
+
+    void BodyShootBack()
+    {
+        speed = 10;
+        Invoke("BodyShootCoolback", 3);
+    }
+
+    void BodyShootCoolback() {
+        bodyShootActive = false;
+    }
+
     private void LoadSelectedCharacter()
     {
         var spritePrefab = GameManager.Instance.GetPlayerSpritePrefab(playerIndex);
         if (spritePrefab)
         {
-            Destroy(spriteRoot);
+            DestroyImmediate(spriteRoot);
 
             spriteRoot = Instantiate(spritePrefab);
-            spriteRoot.gameObject.name = spriteRoot.gameObject.name.Replace("(Clone)", "");
             spriteRoot.transform.SetParent(transform, false);
+            spriteRoot.gameObject.name = spriteRoot.gameObject.name.Replace("(Clone)", "");
         }
     }
 
     void Update()
     {
         UpdateAnimator();
+
+        if (input.attack) {
+            BodyShoot();
+        }
     }
 
     void UpdateAnimator()
@@ -140,6 +171,14 @@ public class Player : MonoBehaviour {
 
         if (infectable != null)
             infectable.ValidateInfectioPlayer(this);
+
+        Player hitPlayer = collision.gameObject.GetComponent<Player>();
+
+        if (hitPlayer != null)
+        {
+            lastHitPlayer = hitPlayer;
+            timeHitPLayer = Time.time;
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -152,6 +191,7 @@ public class Player : MonoBehaviour {
         }
     }
 
+    
     void OnTriggerExit(Collider other)
     {
         Player otherPlayer = other.gameObject.GetComponent<Player>();
@@ -164,8 +204,17 @@ public class Player : MonoBehaviour {
 
     public void Die()
     {
+
+        if (timeHitPLayer +1 < Time.time) {
+            lastHitPlayer = null;
+        }
+        if (lastHitPlayer != null) {
+            GameplayManager.Instance.ChangeInfectableOwner(this, lastHitPlayer);
+        }
         if(dieAudio)
             AudioSource.PlayClipAtPoint(dieAudio, Camera.main.transform.position);
         transform.position = respawnPosition;
     }
+
+    
 }
