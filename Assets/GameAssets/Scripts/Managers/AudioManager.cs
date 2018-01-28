@@ -51,4 +51,8 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager> {
 	void Update () {
 		
 	}
+	public AudioClip rule;
+	public void ChangedRule () {
+		audioSource.PlayOneShot(rule);
+	} 
 }

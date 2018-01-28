@@ -98,5 +98,6 @@ public class GameplayManager : MonoBehaviour {
         for (int i = 0; i < 4; i++) {
             Rules[(i + 1) % 4].color = GameManager.Instance.GetPlayerColor(RuleManager.Instance.GetRule(i));
         }
+        AudioManager.Instance.ChangedRule();
     }
 }
