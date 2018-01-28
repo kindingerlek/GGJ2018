@@ -10,6 +10,7 @@ public class CharacterSelection : MonoBehaviour {
 	public class CharacterConfig {
 		public Sprite Sprite;
 		public string Name;
+		public GameObject GameplaySpritePrefab;
 		[System.NonSerialized] public bool InUse;
 	}
 

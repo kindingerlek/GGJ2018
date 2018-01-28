@@ -30,8 +30,10 @@ public class CharacterSelectionManager : MonoBehaviour {
 		var i = Characters.IndexOf((CharacterSelection)sender);
 		if (ConfirmedSelections.Any(inUse => inUse.Value == e.Character.Sprite && inUse.Key != i))
 			e.Cancel();
-		else
+		else {
 			ConfirmedSelections[i] = e.Character.Sprite;
+			GameManager.Instance.SetPlayerPrefab(i, e.Character.GameplaySpritePrefab);
+		}
 		RefreshUses();
 	}
 

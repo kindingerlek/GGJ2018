@@ -11,12 +11,26 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
     [SerializeField] Color P3Color;
     [SerializeField] Color P4Color;
 
+    [SerializeField] GameObject[] PlayerSprites;
+
     static GameManager()
     {
         Lazy = false;
         FindInactive = true;
         DestroyOthers = DestroyOptions.DestroyBehaviour;
         Persist = true;
+    }
+
+    public void SetPlayerPrefab(int i, GameObject prefab)
+    {
+        PlayerSprites[i] = prefab;
+    }
+
+    public GameObject GetPlayerSpritePrefab(int i)
+    {
+        if (i <= 0 || i > PlayerSprites.Length)
+            return null;
+        return PlayerSprites[i - 1];
     }
 
     public Color GetPlayerColor(int i)
