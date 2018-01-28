@@ -11,13 +11,13 @@ public class Infectable : MonoBehaviour {
 
     void Start()
     {
-        GameManager.Instance.infectables.Add(this);
+        GameplayManager.Instance.infectables.Add(this);
     }
 
     void OnDestroy()
     {
-        if (GameManager.Instance) {
-            GameManager.Instance.infectables.Remove(this);
+        if (GameplayManager.Instance) {
+            GameplayManager.Instance.infectables.Remove(this);
         }
     }
 
@@ -84,8 +84,8 @@ public class Infectable : MonoBehaviour {
             infectedBy.points += 1;
         }
 
-        GetComponent<NPC2>().npcIndicator.color = GameManager.Instance.getPlayerColor(other.playerIndex);
+        GetComponent<NPC2>().npcIndicator.color = GameManager.Instance.GetPlayerColor(other.playerIndex);
 
-        GameManager.Instance.UpdatePoints();
+        GameplayManager.Instance.UpdatePoints();
     }
 }

@@ -48,7 +48,7 @@ public class NPC2 : MonoBehaviour {
             Debug.Log("None npc indicator, please manually assing this");
         else
         {
-            npcIndicator.color = GetComponent<Infectable>().infectedBy ? GameManager.Instance.getPlayerColor(GetComponent<Infectable>().infectedBy.playerIndex) : Color.grey;
+            npcIndicator.color = GetComponent<Infectable>().infectedBy ? GameManager.Instance.GetPlayerColor(GetComponent<Infectable>().infectedBy.playerIndex) : Color.grey;
         }
 
         initialPosition = transform.position;
@@ -67,8 +67,8 @@ public class NPC2 : MonoBehaviour {
     {
         direction = transform.position - lastFramePosition;
 
-        animator.SetFloat("Horizontal", direction.normalized.x);
-        animator.SetFloat("Vertical", direction.normalized.z);
+        animator.SetFloat("Horizontal", direction.normalized.x, 0.1f, Time.deltaTime);
+        animator.SetFloat("Vertical", direction.normalized.z, 0.1f, Time.deltaTime);
 
         lastFramePosition = transform.position;
     }

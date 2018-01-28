@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
 
     public int points = 0;
 
+    [SerializeField] private GameObject spriteRoot;
     [SerializeField] private SpriteRenderer indicator;
     [SerializeField] private float speed = 10;
     [SerializeField] private float maxVelocityChange = 10.0f;
@@ -26,18 +27,37 @@ public class Player : MonoBehaviour {
     void Awake()
     {
         input = this.GetComponent<PlayerInput>();
-        rigidbody = this.GetComponent<Rigidbody>();
-        animator = this.GetComponentInChildren<Animator>();
 
         if (!indicator)
             Debug.Log("Please assing the child who has sprite renderer to be indicator");
         else
         {
-            indicator.color = GameManager.Instance.getPlayerColor(playerIndex);
+            indicator.color = GameManager.Instance.GetPlayerColor(playerIndex);
         }
 
         points = 0;
+    }
+
+    void Start()
+    {
+        LoadSelectedCharacter();
+
+        rigidbody = this.GetComponent<Rigidbody>();
+        animator = this.GetComponentInChildren<Animator>();
         rigidbody.freezeRotation = true;
+    }
+
+    private void LoadSelectedCharacter()
+    {
+        var spritePrefab = GameManager.Instance.GetPlayerSpritePrefab(playerIndex);
+        if (spritePrefab)
+        {
+            Destroy(spriteRoot);
+
+            spriteRoot = Instantiate(spritePrefab);
+            spriteRoot.gameObject.name = spriteRoot.gameObject.name.Replace("(Clone)", "");
+            spriteRoot.transform.SetParent(transform, false);
+        }
     }
 
     void Update()
@@ -73,7 +93,7 @@ public class Player : MonoBehaviour {
     {
         bool updated = false;
         foreach(var otherPlayer in playersInArea) {
-            if (otherPlayer.points > points)
+            if (otherPlayer.points < points)
                 continue;
 
             var pointsToSteal = Mathf.Min(otherPlayer.points, Time.fixedDeltaTime * stealPointsPerSecond);
@@ -92,14 +112,14 @@ public class Player : MonoBehaviour {
         }
 
         if (updated) {
-            GameManager.Instance.UpdatePoints();
+            GameplayManager.Instance.UpdatePoints();
         }
     }
 
     void StealPoints(Player otherPlayer, int points)
     {
         stealCredits[otherPlayer] -= points;
-        var steal = GameManager.Instance.infectables
+        var steal = GameplayManager.Instance.infectables
             .Where(i => i.infectedBy == otherPlayer)
             .OrderByDescending(i => Vector3.SqrMagnitude(i.transform.position - transform.position))
             .Take(points);

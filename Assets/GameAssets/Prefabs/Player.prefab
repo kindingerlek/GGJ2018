@@ -182,6 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05dc8889695ad7c458a015c48ee0b063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  registerPlayer: 1
   myPlayerIndex: 1
   upKey: Xbox{0}LStickUp
   downKey: Xbox{0}LStickDown
@@ -205,6 +206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   points: 0
+  spriteRoot: {fileID: 1685133774141246}
   indicator: {fileID: 212527129461037844}
   speed: 10
   maxVelocityChange: 10

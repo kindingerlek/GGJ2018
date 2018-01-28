@@ -35,7 +35,10 @@ public class Npc : MonoBehaviour {
 
     void OnCollisionEnter(Collision other)
     {
-        GetState().OnCollisionEnter(other);
+        var s = GetState();
+        if (s != null) {
+            s.OnCollisionEnter(other);
+        }
     }
 
     #region States
@@ -44,7 +47,7 @@ public class Npc : MonoBehaviour {
         switch (fsm.State) {
             case States.Walking: return walking;
         }
-        throw new ArgumentException();
+        return null;
     }
 
     public IEnumerator Walking_Enter()
@@ -56,7 +59,10 @@ public class Npc : MonoBehaviour {
     #endregion
 
     void OnDrawGizmosSelected() {
-        GetState().OnDrawGizmosSelected();
+        var s = GetState();
+        if (s != null) {
+            s.OnDrawGizmosSelected();
+        }
     }
 
     #region States Data
