@@ -6,10 +6,15 @@ using UnityEngine.UI;
 public class GameplayManager : MonoBehaviour {
 
     public float timeToChangeRule;
+    public float timeOfRound = 60f;
     public List<Player> players = new List<Player>();
     public List<Infectable> infectables = new List<Infectable>();
 
+    private float timeToEnd;
+
     [Header("UI")]
+    [SerializeField] Canvas endCanvas;
+    [SerializeField] Text timer;
     [SerializeField] Text P1Score;
     [SerializeField] Text P2Score;
     [SerializeField] Text P3Score;
@@ -30,6 +35,8 @@ public class GameplayManager : MonoBehaviour {
         }
 
         Instance = this;
+
+        timeToEnd = Time.time + timeOfRound;
     }
 
     /// <summary>
@@ -62,6 +69,12 @@ public class GameplayManager : MonoBehaviour {
 
     public void Update()
     {
+
+        timer.text = ((int)(timeToEnd - Time.time)).ToString();
+        if(Time.time >= timeToEnd)
+        {
+            EndGame();
+        }
     }
 
     public void ChangeInfectableOwner(Player playerOrigin, Player playerDest) {
@@ -99,5 +112,11 @@ public class GameplayManager : MonoBehaviour {
             Rules[(i + 1) % 4].color = GameManager.Instance.GetPlayerColor(RuleManager.Instance.GetRule(i));
         }
         AudioManager.Instance.ChangedRule();
+    }
+
+    void EndGame()
+    {
+        Time.timeScale = 0;
+        endCanvas.gameObject.active = true;
     }
 }
