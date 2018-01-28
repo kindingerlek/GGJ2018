@@ -5,20 +5,9 @@ using MonsterLove.StateMachine;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(Renderer))]
 public class Infectable : MonoBehaviour {
     
     public Player infectedBy = null;
-
-    private new Renderer renderer;
-    private Material originalMaterial;
-
-    public void Awake()
-    {
-        renderer = GetComponent<Renderer>();
-
-        originalMaterial = renderer.material;
-    }
 
     void Start()
     {
@@ -69,7 +58,7 @@ public class Infectable : MonoBehaviour {
             infectedBy.points += 1;
         }
 
-        renderer.material.color = GameManager.Instance.getPlayerColor(other.playerIndex);
+        GetComponent<NPC2>().npcIndicator.color = GameManager.Instance.getPlayerColor(other.playerIndex);
 
         GameManager.Instance.UpdatePoints();
     }

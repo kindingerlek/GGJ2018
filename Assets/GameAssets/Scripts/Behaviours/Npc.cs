@@ -11,6 +11,7 @@ public class Npc : MonoBehaviour {
     public enum States
     {
         Init,
+        idle,
         Walking
     }
 
