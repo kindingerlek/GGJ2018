@@ -20,19 +20,23 @@ public class CharacterSelectionManager : MonoBehaviour {
 
 	void Character_CancelSelection(object sender, EventArgs e)
 	{
-		var i = Characters.IndexOf((CharacterSelection)sender);
+		var ch = (CharacterSelection)sender;
+		var i = Characters.IndexOf(ch);
 		ConfirmedSelections.Remove(i);
+		GameManager.Instance.SetPlayerEnabled(ch.PlayerIndex, false);
 		RefreshUses();
 	}
 
 	void Character_ConfirmSelection(object sender, CharacterSelection.ConfirmEventArgs e)
 	{
-		var i = Characters.IndexOf((CharacterSelection)sender);
+		var ch = (CharacterSelection)sender;
+		var i = Characters.IndexOf(ch);
 		if (ConfirmedSelections.Any(inUse => inUse.Value == e.Character.Sprite && inUse.Key != i))
 			e.Cancel();
 		else {
 			ConfirmedSelections[i] = e.Character.Sprite;
-			GameManager.Instance.SetPlayerPrefab(i, e.Character.GameplaySpritePrefab);
+			GameManager.Instance.SetPlayerPrefab(ch.PlayerIndex, e.Character.GameplaySpritePrefab);
+			GameManager.Instance.SetPlayerEnabled(ch.PlayerIndex, true);
 		}
 		RefreshUses();
 	}
@@ -50,7 +54,7 @@ public class CharacterSelectionManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (ConfirmedSelections.Count >= Characters.Count) {
+		if ((Input.GetKey(KeyCode.Return) && ConfirmedSelections.Any()) || ConfirmedSelections.Count >= Characters.Count) {
 			SceneManager.LoadScene("gameplay");
 		}
 	}

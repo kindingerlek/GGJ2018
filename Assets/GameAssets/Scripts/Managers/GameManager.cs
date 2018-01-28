@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,11 +14,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
 
     [SerializeField] GameObject[] PlayerSprites;
 
+    readonly HashSet<int> playersEnabled = new HashSet<int>();
+
     static GameManager()
     {
         Lazy = false;
         FindInactive = true;
-        DestroyOthers = DestroyOptions.DestroyBehaviour;
+        DestroyOthers = DestroyOptions.DestroyGameObject;
         Persist = true;
     }
 
@@ -30,7 +33,24 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
     {
         if (i <= 0 || i > PlayerSprites.Length)
             return null;
-        return PlayerSprites[i - 1];
+        return PlayerSprites[i];
+    }
+
+    public bool GetPlayerEnabled(int player) {
+        if (playersEnabled.Count <= 0)
+			return true;
+		var res = playersEnabled.Contains(player);
+        Debug.Log("PlayerEnabled: " + player + " - " + res);
+        return res;
+	}
+
+    public void SetPlayerEnabled(int i, bool value)
+    {
+        Debug.Log("SettingPlayerEnabled: " + i + " - " + value);
+        if (value)
+            playersEnabled.Add(i);
+        else
+            playersEnabled.Remove(i);
     }
 
     public Color GetPlayerColor(int i)

@@ -29,6 +29,11 @@ public class Player : MonoBehaviour {
     {
         input = this.GetComponent<PlayerInput>();
 
+        if (!GameManager.Instance.GetPlayerEnabled(input.myPlayerIndex)) {
+            Destroy(gameObject);
+            return;
+        }
+
         if (!indicator)
             Debug.Log("Please assing the child who has sprite renderer to be indicator");
         else
@@ -55,11 +60,11 @@ public class Player : MonoBehaviour {
         var spritePrefab = GameManager.Instance.GetPlayerSpritePrefab(playerIndex);
         if (spritePrefab)
         {
-            Destroy(spriteRoot);
+            DestroyImmediate(spriteRoot);
 
             spriteRoot = Instantiate(spritePrefab);
-            spriteRoot.gameObject.name = spriteRoot.gameObject.name.Replace("(Clone)", "");
             spriteRoot.transform.SetParent(transform, false);
+            spriteRoot.gameObject.name = spriteRoot.gameObject.name.Replace("(Clone)", "");
         }
     }
 

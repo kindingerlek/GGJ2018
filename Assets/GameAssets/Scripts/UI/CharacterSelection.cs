@@ -46,6 +46,8 @@ public class CharacterSelection : MonoBehaviour {
 
 	bool temp1InUse = true;
 
+	public int PlayerIndex { get { return playerInput.myPlayerIndex; } }
+
 	void Awake()
 	{
 		playerInput = GetComponent<PlayerInput>();
