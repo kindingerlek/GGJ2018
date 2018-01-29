@@ -40,9 +40,9 @@ public class FollowMultipleTarget : MonoBehaviour
 
     private void Zoom()
     {
-        Debug.Log(GetGreaatestDistance());
+        //Debug.Log(GetGreaatestDistance());
         float newZoom =Mathf.Lerp(minZoom, maxZoom, GetGreaatestDistance()/ zoomLimiter);
-        Debug.Log(newZoom);
+        //Debug.Log(newZoom);
         cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, newZoom, Time.deltaTime);
     }
 
@@ -75,9 +75,9 @@ public class FollowMultipleTarget : MonoBehaviour
             bounds.Encapsulate(targets[i].position);
 
         }
-        Debug.Log("diagonal:" + Mathf.Sqrt((bounds.size.x * bounds.size.x) + (bounds.size.z * bounds.size.z)));
-        Debug.Log("x:" + bounds.size.x);
-        Debug.Log("y:" + bounds.size.z);
+        //Debug.Log("diagonal:" + Mathf.Sqrt((bounds.size.x * bounds.size.x) + (bounds.size.z * bounds.size.z)));
+        //Debug.Log("x:" + bounds.size.x);
+        //Debug.Log("y:" + bounds.size.z);
         return Mathf.Sqrt((bounds.size.x* bounds.size.x)+(bounds.size.z*bounds.size.z));
     }
 }

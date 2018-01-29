@@ -205,7 +205,7 @@ public class Player : MonoBehaviour {
     public void Die()
     {
 
-        if (timeHitPLayer +1 < Time.time) {
+        if (timeHitPLayer +3 < Time.time) {
             lastHitPlayer = null;
         }
         if (lastHitPlayer != null) {

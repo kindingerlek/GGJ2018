@@ -64,7 +64,7 @@ public class GameplayManager : MonoBehaviour {
     void Start()
     {
         UpdatePoints();
-        InvokeRepeating("ChangeRules", 0, 15);
+        InvokeRepeating("ChangeRules", 0, timeToChangeRule);
     }
 
     public void Update()
@@ -116,7 +116,6 @@ public class GameplayManager : MonoBehaviour {
 
     void EndGame()
     {
-        Time.timeScale = 0;
         endCanvas.gameObject.active = true;
     }
 }
